@@ -1,0 +1,16 @@
+{
+  "name": "marta_api",
+  "version": "0.0.1",
+  "description": "MARTA API for 3rd party apps",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jake Swanson <jakswa@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.1.5",
+    "hapi": "^12.1.0",
+    "request": "^2.69.0"
+  }
+}
