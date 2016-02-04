@@ -30,6 +30,9 @@ module.exports = {
     reqPromise.then(function(resp) {
       if (resp.statusCode == 200) {
         _reqCache.arrivals = resp.body.toLowerCase();
+        // why oh why is this value a string...
+        _reqCache.arrivals = _reqCache.arrivals
+          .replace(/(waiting_seconds":)"([^"]+)"/g, '$1$2');
         response(_reqCache.arrivals);
       } else {
         response({error: resp.body});
