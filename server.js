@@ -1,5 +1,6 @@
 'use strict';
 
+const newrelic = require('newrelic');
 const Hapi = require('hapi');
 const Marta = require('./marta');
 
