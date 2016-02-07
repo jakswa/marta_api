@@ -3,6 +3,7 @@
 const request = require('request');
 const Promise = require('bluebird');
 const l_ = require('lodash');
+const Boom = require('boom');
 
 const moment = require('moment-timezone');
 moment.tz.setDefault("America/New_York");
@@ -43,7 +44,21 @@ module.exports = {
         fillGapsWithSchedule(_reqCache.arrivals);
         response(_reqCache.arrivals);
       } else {
-        response({error: resp.body});
+        // enter the clusterfuck that is MARTA IIS error handling
+        try {
+          // this will never go well, because MARTA bombs
+          // with IIS HTML views showing developer workspace stack traces
+          // see: https://goo.gl/Z7QmH5
+          // ...but one can hope for a better tomorrow
+          var errorJSON = JSON.parse(resp.body);
+          response(Boom.create(resp.statusCode, 'MARTA API error', errorJSON));
+        } catch (e) {
+          if (e instanceof SyntaxError) {
+            response(Boom.serverTimeout("Couldn't parse MARTA's error response, like usual."));
+          } else {
+            throw e;
+          }
+        }
       }
     });
   }
