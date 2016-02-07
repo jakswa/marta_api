@@ -2,8 +2,10 @@
 
 const request = require('request');
 const Promise = require('bluebird');
-const moment = require('moment');
 const l_ = require('lodash');
+
+const moment = require('moment-timezone');
+moment.tz.setDefault("America/New_York");
 
 const serviceCalendar = require('./lib/schedule/calendar.json');
 const MARTA_API_KEY = process.env.MARTA_TRAIN_API_KEY;
@@ -121,7 +123,11 @@ function gtfsTimeToSec(timestamp) {
 // scheduled arrivals in any line
 // (scheduled times are sorted, using binary search)
 function nextArrivals(station, dir) {
-  var now = moment().format('HH:mm:ss');
+  var nowMoment = moment();
+  var now = nowMoment.format('HH:mm:ss');
+  if (nowMoment.hours() < 3) {
+    now = (nowMoment.hours() + 24) + now.slice(2);
+  }
   // fetch lines servicing this station in this direction
   var lines = arrivalTimes(station, dir);
   var results = [];
@@ -146,7 +152,7 @@ function nextArrivals(station, dir) {
 // there is a parseGTFS task that builds
 // this schedule data from MARTA's GTFS zip files
 function arrivalTimes(station, dir) {
-  if (station.indexOf('station') == -1) station += ' station';
+  if (station.indexOf(' station') == -1) station += ' station';
   var dow = moment().subtract(3, 'hours').format('ddd').toLowerCase();
   var service = require("./lib/schedule/service" + serviceCalendar[dow]);
   return service[station][dir];
