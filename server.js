@@ -17,6 +17,13 @@ server.route({
   path: '/arrivals', 
   handler: Marta.arrivals
 });
+server.route({
+  method: 'GET',
+  path: '/ping', 
+  handler: function(request, response) {
+    response('pong');
+  }
+});
 
 // Start the server
 server.start((err) => {
