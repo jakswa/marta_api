@@ -130,8 +130,9 @@ function gtfsTimeToSec(timestamp) {
     }
   }
 
-  var arrivalTime = moment(timestamp, 'HH:mm:ss');
-  return parseInt((arrivalTime - now) / 1000);
+  now = moment.duration(now.format('HH:mm:ss'));
+  var arrivalTime = moment.duration(timestamp);
+  return arrivalTime.subtract(now).asSeconds();
 }
 
 // given station + direction, give us some
