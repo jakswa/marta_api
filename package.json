@@ -4,7 +4,7 @@
   "description": "MARTA API for 3rd party apps",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "author": "Jake Swanson <jakswa@gmail.com>",
   "license": "ISC",
@@ -18,5 +18,11 @@
     "moment-timezone": "^0.5.0",
     "newrelic": "^1.25.1",
     "request": "^2.69.0"
+  },
+  "devDependencies": {
+    "chai": "*",
+    "mocha": "*",
+    "rewire": "^2.5.1",
+    "sinon": "^1.17.3"
   }
 }

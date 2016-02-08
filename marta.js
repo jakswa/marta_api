@@ -56,7 +56,9 @@ module.exports = {
           if (e instanceof SyntaxError) {
             response(Boom.serverTimeout("Couldn't parse MARTA's error response, like usual."));
           } else {
-            throw e;
+            response(Boom.badImplementation("I did a woops.", {
+              marta_code: resp.statusCode,
+            }));
           }
         }
       }
@@ -101,7 +103,7 @@ function fillGapsWithSchedule(arrivals) {
       var scheduled = nextArrivals(station, gapDirection);
       for (var i = 0; i < scheduled.length; i++) {
         var timeAndLine = scheduled[i];
-        var waiting_seconds = gtfsTimeToSec(timeAndLine[0]);
+        var waiting_seconds = gtfsSeconds(moment(), timeAndLine[0]);
         arrivals.push({
           scheduled: true,
           waiting_seconds: waiting_seconds,
@@ -118,20 +120,22 @@ function fillGapsWithSchedule(arrivals) {
 // waiting_seconds left
 // change '24:' and '25:' to 0 and 1
 // (GTFS goes past 23:59 timestamps)
-function gtfsTimeToSec(timestamp) {
-  var hour = parseInt(timestamp.slice(0,2));
-  var now = moment();
-  if ([24, 25].indexOf(hour) > -1) {
-    timestamp = (hour - 24) + timestamp.slice(2);
-    // imagine now = 23:59... we gotta move this one too
-    // because timestamp is going to parse to early morning
-    if (now.hours() > 20) {
+var wrapMin = moment.duration(24, 'hours');
+var wrapMax = moment.duration(28, 'hours');
+function gtfsSeconds(fromMoment, toTimestamp) {
+  // let's deal with durations instead of times
+  var now = moment.duration(fromMoment.format('HH:mm:ss'));
+  var arrivalTime = moment.duration(toTimestamp);
+
+  if (arrivalTime >= wrapMin && arrivalTime <= wrapMax) {
+    arrivalTime.subtract(24, 'hours');
+    // if we just moved it before the arrivalTime
+    // (meaning it's before midnight, but arrival is after)
+    if (now > arrivalTime) {
       now.subtract(24, 'hours');
     }
   }
 
-  now = moment.duration(now.format('HH:mm:ss'));
-  var arrivalTime = moment.duration(timestamp);
   return arrivalTime.subtract(now).asSeconds();
 }
 
