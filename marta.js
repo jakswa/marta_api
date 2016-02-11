@@ -92,7 +92,7 @@ function fillGapsWithSchedule(arrivals) {
   // add some 'scheduled' arrivals, if we can
   // find any in the schedule
   for(var station in dirs) {
-    if (dirs[station].length % 2 == 2)
+    if (dirs[station].length % 2 == 0)
       continue; // ignore if doesn't have gaps
     for (var d = 0; d <= dirs[station].length; d++) {
       var direction = dirs[station][d];
