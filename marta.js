@@ -25,15 +25,16 @@ module.exports = {
     if (_reqCache.promise) {
       reqPromise = _reqCache.promise;
     } else {
-      _reqCache.created = new Date();
       reqPromise = prRequest(MARTA_URL + MARTA_API_KEY);
       reqPromise.then(function() {
         _reqCache.promise = null;
       });
     }
 
-    reqPromise.then(function(resp) {
+    return response(reqPromise.then(function(resp) {
       if (resp.statusCode == 200) {
+        // successful MARTA response, cache it
+        _reqCache.created = new Date();
         _reqCache.arrivals = resp.body.toLowerCase();
         // why oh why is this value a string...
         _reqCache.arrivals = _reqCache.arrivals
@@ -42,27 +43,20 @@ module.exports = {
         // (a little intensive... wish I could think of simpler way)
         _reqCache.arrivals = JSON.parse(_reqCache.arrivals);
         fillGapsWithSchedule(_reqCache.arrivals);
-        response(_reqCache.arrivals);
+        return _reqCache.arrivals;
       } else {
-        // enter the clusterfuck that is MARTA IIS error handling
-        try {
-          // this will never go well, because MARTA bombs
-          // with IIS HTML views showing developer workspace stack traces
-          // see: https://goo.gl/Z7QmH5
-          // ...but one can hope for a better tomorrow
-          var errorJSON = JSON.parse(resp.body);
-          response(Boom.create(resp.statusCode, 'MARTA API error', errorJSON));
-        } catch (e) {
-          if (e instanceof SyntaxError) {
-            response(Boom.serverTimeout("Couldn't parse MARTA's error response, like usual."));
-          } else {
-            response(Boom.badImplementation("I did a woops.", {
-              marta_code: resp.statusCode,
-            }));
-          }
-        }
+        var errorJSON = JSON.parse(resp.body); // one day they might have error JSON
+        throw Boom.serverTimeout("MARTA API error: " + errorJSON.message);
       }
-    });
+    }).catch(function(e) {
+      if (e instanceof SyntaxError) {
+        // call MARTA out for this, hoping eventually they add error JSON
+        // see: https://goo.gl/Z7QmH5
+        throw Boom.serverTimeout("Couldn't parse MARTA's error response, like usual.");
+      } else {
+        throw e;
+      }
+    }));
   }
 };
 
