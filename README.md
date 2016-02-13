@@ -18,7 +18,7 @@ MARTA_TRAIN_API_KEY=<api_key> node server.js
 
 # updates
 
-The grew a little since it was first written. In addition to serving as a proxy between MARTA's API and the browser
+This grew a little since it was first written. In addition to serving as a proxy between MARTA's API and the browser
 (because you shouldn't put your marta API key into the browser), there now exists a hook that fills in data gaps with schedule data.
 
 ## schedule data
