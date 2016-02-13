@@ -6,7 +6,7 @@ proxy between you and MARTA that:
 - caches API responses for 10s (all users see the same API response within a 10s window)
 - puts `scheduled` entries into the API response when a station has one direction, but not the other
 
-### basic instructions (and set the ENV variable at the same time):
+### basic instructions:
 1. clone the repo, cd to it
 2. run `npm install` (install node if you haven't, at this step)
 3. set the `MARTA_TRAIN_API_KEY` environment variable, and then run it:
