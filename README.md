@@ -1,7 +1,7 @@
 # marta_api
 
 Set the MARTA_TRAIN_API_KEY environment variable and then run this app to give yourself a
-proxy between MARTA that:
+proxy between you and MARTA that:
 - removes all capitalized letters from the MARTA API response (got too much, sorry)
 - caches API responses for 10s (all users see the same API response within a 10s window)
 - puts `scheduled` entries into the API response when a station has one direction, but not the other
