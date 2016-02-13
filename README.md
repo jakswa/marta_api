@@ -1,4 +1,5 @@
-# marta_api
+# marta_api ![build status](https://codeship.com/projects/a6c28c70-b064-0133-543b-565ee1f98c10/status?branch=master)
+
 
 Set the MARTA_TRAIN_API_KEY environment variable and then run this app to give yourself a
 proxy between you and MARTA that:
