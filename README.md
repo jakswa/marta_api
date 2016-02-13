@@ -1,5 +1,19 @@
 # marta_api
 
+Set the MARTA_TRAIN_API_KEY environment variable and then run this app to give yourself a
+proxy between MARTA that:
+- removes all capitalized letters from the MARTA API response (got too much, sorry)
+- caches API responses for 10s (all users see the same API response within a 10s window)
+- puts `scheduled` entries into the API response when a station has one direction, but not the other
+
+### to run (and set the ENV variable at the same time):
+```
+MARTA_TRAIN_API_KEY=<api_key> node server.js
+```
+
+
+# updates
+
 The grew a little since it was first written. In addition to serving as a proxy between MARTA's API and the browser
 (because you shouldn't put your marta API key into the browser), there now exists a hook that fills in data gaps with schedule data.
 
