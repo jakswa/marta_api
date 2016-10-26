@@ -3,6 +3,7 @@
   "description": "A proxy for MARTA API data, using HAPI",
   "repository": "https://github.com/jakswa/marta_api",
   "logo": "http://www.marta.io/img/marta_touch_aw.png",
+  "success_url": "/arrivals",
   "env": {
     "MARTA_TRAIN_API_KEY": {
       "description": "The realtime train API key you received from marta"
