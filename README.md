@@ -17,7 +17,6 @@ proxy between you and MARTA that:
 MARTA_TRAIN_API_KEY=<api_key> node server.js
 ```
 
-
 # updates
 
 This grew a little since it was first written. In addition to serving as a proxy between MARTA's API and the browser
