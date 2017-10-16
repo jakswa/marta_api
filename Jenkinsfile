@@ -6,9 +6,18 @@ pipeline {
         sh 'npm install'
       }
     }
-    stage('Test') {
-      steps {
-        sh 'npm run-script test'
+    stage('Echo HI') {
+      parallel {
+        stage('Test') {
+          steps {
+            sh 'npm run-script test'
+          }
+        }
+        stage('echo HI') {
+          steps {
+            sh 'node -e "console.log(\'HI\')"'
+          }
+        }
       }
     }
   }
